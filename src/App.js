@@ -8,11 +8,15 @@ import { UserProvider } from './context/UserContext';
 import Home from './pages/Home';
 import Contactos from './pages/Contactos';
 import Catalogo from './pages/Catalogo';
+import Story from './pages/Story';
+import Login from './pages/Login';
+
 
 // Styles
 import './styles/styles.css';
 import './styles/carrito.css';
 import './styles/contactos.css';
+import './styles/story.css';
 
 function App() {
   return (
@@ -23,6 +27,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/contactos" element={<Contactos />} />
+            <Route path="/story" element={<Story />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </CartProvider>
       </UserProvider>
