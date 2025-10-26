@@ -7,6 +7,7 @@ import { UserProvider } from './context/UserContext';
 // Pages
 import Home from './pages/Home';
 import Contactos from './pages/Contactos';
+import Catalogo from './pages/Catalogo';
 
 // Styles
 import './styles/styles.css';
@@ -20,6 +21,7 @@ function App() {
         <CartProvider>
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/catalogo" element={<Catalogo />} />
             <Route path="/contactos" element={<Contactos />} />
           </Routes>
         </CartProvider>
