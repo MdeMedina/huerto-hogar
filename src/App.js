@@ -7,11 +7,13 @@ import { UserProvider } from './context/UserContext';
 // Pages
 import Home from './pages/Home';
 import Contactos from './pages/Contactos';
+import Story from './pages/Story';
 
 // Styles
 import './styles/styles.css';
 import './styles/carrito.css';
 import './styles/contactos.css';
+import './styles/story.css';
 
 function App() {
   return (
@@ -21,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/contactos" element={<Contactos />} />
+            <Route path="/story" element={<Story />} />
           </Routes>
         </CartProvider>
       </UserProvider>
