@@ -17,15 +17,15 @@ export const CartProvider = ({ children }) => {
   useEffect(() => {
     const savedCart = localStorage.getItem('carritoCompras');
     if (savedCart) {
-      try { // Añadir try-catch por si el JSON está corrupto
+      try {
         setCart(JSON.parse(savedCart));
       } catch (e) {
         console.error("Error al parsear carrito desde localStorage", e);
-        localStorage.removeItem('carritoCompras'); // Limpiar si está corrupto
+        localStorage.removeItem('carritoCompras');
         setCart([]);
       }
     } else {
-      setCart([]); // Asegurar que es un array vacío si no hay nada guardado
+      setCart([]); 
     }
   }, []);
 
@@ -37,11 +37,11 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product) => {
-    setCart(currentCart => { // Usar función de actualización para el estado
+    setCart(currentCart => { 
       const existingItemIndex = currentCart.findIndex(item => item.codigo === product.codigo);
 
       if (existingItemIndex > -1) {
-        // Si existe, crea un nuevo array con el item actualizado
+
         const newCart = [...currentCart];
         const updatedItem = {
            ...newCart[existingItemIndex],
@@ -50,13 +50,11 @@ export const CartProvider = ({ children }) => {
         newCart[existingItemIndex] = updatedItem;
         return newCart;
       } else {
-        // Si no existe, agrégalo con cantidad 1
         return [...currentCart, { ...product, cantidad: 1 }];
       }
     });
   };
 
-  // ... (removeFromCart, updateQuantity, getTotal, etc. se mantienen igual)
    const removeFromCart = (codigo) => {
     setCart(currentCart => currentCart.filter(item => item.codigo !== codigo));
   };
@@ -74,10 +72,9 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotal = () => {
-    // Asegurarse que cart es un array antes de reducir
+
     if (!Array.isArray(cart)) return 0;
     return cart.reduce((total, item) => {
-      // Asegurarse que precio y cantidad son números
       const price = typeof item.precio === 'number' ? item.precio : 0;
       const quantity = typeof item.cantidad === 'number' ? item.cantidad : 0;
       return total + (price * quantity);
@@ -85,7 +82,6 @@ export const CartProvider = ({ children }) => {
   };
 
   const getItemCount = () => {
-     // Asegurarse que cart es un array antes de reducir
     if (!Array.isArray(cart)) return 0;
     return cart.reduce((count, item) => {
         const quantity = typeof item.cantidad === 'number' ? item.cantidad : 0;

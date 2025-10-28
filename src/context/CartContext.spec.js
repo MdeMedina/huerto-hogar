@@ -3,20 +3,11 @@ import React from 'react';
 import { renderHook, act } from '@testing-library/react';
 import { CartProvider, useCart } from './CartContext';
 
-// Limpia el localStorage antes de cada prueba
 beforeEach(() => {
   localStorage.clear();
 });
 
-// Mockear localStorage si es necesario (a veces útil en entornos de test más estrictos)
-// let localStorageMock = {};
-// beforeEach(() => {
-//   localStorageMock = {};
-//   spyOn(localStorage, 'getItem').and.callFake((key) => localStorageMock[key] || null);
-//   spyOn(localStorage, 'setItem').and.callFake((key, value) => (localStorageMock[key] = value + ''));
-//   spyOn(localStorage, 'clear').and.callFake(() => (localStorageMock = {}));
-//   spyOn(localStorage, 'removeItem').and.callFake((key) => delete localStorageMock[key]);
-// });
+
 
 
 describe('CartContext', () => {
@@ -36,12 +27,11 @@ describe('CartContext', () => {
       result.current.addToCart(producto);
     });
 
-    expect(result.current.cart.length).toBe(1); // Ahora debería ser 1
+    expect(result.current.cart.length).toBe(1); 
     expect(result.current.cart[0].codigo).toBe('FR001');
     expect(result.current.cart[0].cantidad).toBe(1);
   });
 
-  // Prueba 2: Incrementar cantidad de producto existente
   it('debería incrementar la cantidad si el producto ya existe', () => {
     const wrapper = ({ children }) => <CartProvider>{children}</CartProvider>;
     const { result } = renderHook(() => useCart(), { wrapper });
@@ -54,8 +44,8 @@ describe('CartContext', () => {
 
      // Aseguramos estado inicial limpio agregando aquí o confiando en beforeEach
      act(() => {
-        result.current.clearCart(); // Opcional si ya usas localStorage.clear() en beforeEach
-        localStorage.clear(); // Redundante si ya está en beforeEach, pero asegura
+        result.current.clearCart();
+        localStorage.clear(); 
       });
 
 
