@@ -13,7 +13,6 @@ export const useUser = () => {
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
-  // Cargar usuario desde localStorage al iniciar
   useEffect(() => {
     const savedUser = localStorage.getItem('usuario');
     if (savedUser) {
