@@ -14,35 +14,51 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  // Cargar carrito desde localStorage al iniciar
   useEffect(() => {
     const savedCart = localStorage.getItem('carritoCompras');
     if (savedCart) {
-      setCart(JSON.parse(savedCart));
+      try { // Añadir try-catch por si el JSON está corrupto
+        setCart(JSON.parse(savedCart));
+      } catch (e) {
+        console.error("Error al parsear carrito desde localStorage", e);
+        localStorage.removeItem('carritoCompras'); // Limpiar si está corrupto
+        setCart([]);
+      }
+    } else {
+      setCart([]); // Asegurar que es un array vacío si no hay nada guardado
     }
   }, []);
 
-  // Guardar carrito en localStorage cuando cambie
   useEffect(() => {
-    localStorage.setItem('carritoCompras', JSON.stringify(cart));
+    // Solo guardar si el carrito es un array (evita guardar `null` o `undefined`)
+    if (Array.isArray(cart)) {
+      localStorage.setItem('carritoCompras', JSON.stringify(cart));
+    }
   }, [cart]);
 
   const addToCart = (product) => {
-    const existingItem = cart.find(item => item.codigo === product.codigo);
-    
-    if (existingItem) {
-      setCart(cart.map(item =>
-        item.codigo === product.codigo
-          ? { ...item, cantidad: item.cantidad + 1 }
-          : item
-      ));
-    } else {
-      setCart([...cart, { ...product, cantidad: 1 }]);
-    }
+    setCart(currentCart => { // Usar función de actualización para el estado
+      const existingItemIndex = currentCart.findIndex(item => item.codigo === product.codigo);
+
+      if (existingItemIndex > -1) {
+        // Si existe, crea un nuevo array con el item actualizado
+        const newCart = [...currentCart];
+        const updatedItem = {
+           ...newCart[existingItemIndex],
+           cantidad: newCart[existingItemIndex].cantidad + 1
+        };
+        newCart[existingItemIndex] = updatedItem;
+        return newCart;
+      } else {
+        // Si no existe, agrégalo con cantidad 1
+        return [...currentCart, { ...product, cantidad: 1 }];
+      }
+    });
   };
 
-  const removeFromCart = (codigo) => {
-    setCart(cart.filter(item => item.codigo !== codigo));
+  // ... (removeFromCart, updateQuantity, getTotal, etc. se mantienen igual)
+   const removeFromCart = (codigo) => {
+    setCart(currentCart => currentCart.filter(item => item.codigo !== codigo));
   };
 
   const updateQuantity = (codigo, cantidad) => {
@@ -50,7 +66,7 @@ export const CartProvider = ({ children }) => {
       removeFromCart(codigo);
       return;
     }
-    setCart(cart.map(item =>
+    setCart(currentCart => currentCart.map(item =>
       item.codigo === codigo
         ? { ...item, cantidad }
         : item
@@ -58,21 +74,33 @@ export const CartProvider = ({ children }) => {
   };
 
   const getTotal = () => {
+    // Asegurarse que cart es un array antes de reducir
+    if (!Array.isArray(cart)) return 0;
     return cart.reduce((total, item) => {
-      return total + (item.precio * item.cantidad);
+      // Asegurarse que precio y cantidad son números
+      const price = typeof item.precio === 'number' ? item.precio : 0;
+      const quantity = typeof item.cantidad === 'number' ? item.cantidad : 0;
+      return total + (price * quantity);
     }, 0);
   };
 
   const getItemCount = () => {
-    return cart.reduce((count, item) => count + item.cantidad, 0);
+     // Asegurarse que cart es un array antes de reducir
+    if (!Array.isArray(cart)) return 0;
+    return cart.reduce((count, item) => {
+        const quantity = typeof item.cantidad === 'number' ? item.cantidad : 0;
+        return count + quantity;
+    }, 0);
   };
 
   const clearCart = () => {
     setCart([]);
   };
 
+
   const openCart = () => setIsCartOpen(true);
   const closeCart = () => setIsCartOpen(false);
+
 
   return (
     <CartContext.Provider

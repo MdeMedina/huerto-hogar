@@ -1,10 +1,11 @@
+// src/components/ProductCard.spec.js
 import React from 'react';
-import { render, screen} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import ProductCard from './ProductCard';
 import { CartProvider } from '../context/CartContext';
 
 describe('ProductCard Component', () => {
-  
+
   const mockProducto = {
     codigo: 'FR001',
     nombre: 'Manzanas Fuji',
@@ -23,9 +24,15 @@ describe('ProductCard Component', () => {
       </CartProvider>
     );
 
-    expect(screen.getByText('Manzanas Fuji')).toBeInTheDocument();
-    expect(screen.getByText(/FR001/)).toBeInTheDocument();
-    expect(screen.getByText(/Frutas Frescas/)).toBeInTheDocument();
-    expect(screen.getByText(/1\.200/)).toBeInTheDocument();
+    // Cambiamos toBeInTheDocument por verificaciones de existencia (no ser null)
+    expect(screen.getByText('Manzanas Fuji')).not.toBeNull();
+    expect(screen.getByText(/FR001/)).not.toBeNull();
+    expect(screen.getByText(/Frutas Frescas/)).not.toBeNull();
+    // Para el precio, aseguramos que el elemento exista y contenga el texto
+    const precioElement = screen.getByText(/1\.200/);
+    expect(precioElement).not.toBeNull();
+    expect(precioElement.textContent).toContain('1.200'); // Verifica el contenido específico si es necesario
+    // También puedes verificar otros elementos si quieres más seguridad
+    expect(screen.getByAltText('Manzanas Fuji')).not.toBeNull();
   });
 });
