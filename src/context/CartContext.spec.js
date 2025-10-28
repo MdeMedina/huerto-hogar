@@ -7,7 +7,15 @@ beforeEach(() => {
   localStorage.clear();
 });
 
-
+// Mockear localStorage 
+// let localStorageMock = {};
+// beforeEach(() => {
+//   localStorageMock = {};
+//   spyOn(localStorage, 'getItem').and.callFake((key) => localStorageMock[key] || null);
+//   spyOn(localStorage, 'setItem').and.callFake((key, value) => (localStorageMock[key] = value + ''));
+//   spyOn(localStorage, 'clear').and.callFake(() => (localStorageMock = {}));
+//   spyOn(localStorage, 'removeItem').and.callFake((key) => delete localStorageMock[key]);
+// });
 
 
 describe('CartContext', () => {
